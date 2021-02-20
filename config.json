@@ -1,0 +1,22 @@
+{
+
+	"params" : 
+	{
+		"local_server" : "True" ,
+		"local_uri": "mysql://root:@localhost/codesmashersblog",
+		"prod_uri" : "mysql://root:@localhost/codesmashersblog",
+		"fb_url": "https://www.facebook.com/",
+		"gt_url" : "https://github.com/arpit456jain/CodeSmashers",
+		"tw_url" : "https://www.twitter.com",
+		"blog_name" : "CodeSmashers",
+		"gmail-user" : "arpit456jain@gmail.com",
+		"gmail-password" : "#vanshika jain#" ,
+		"about_text" : "I am a Btech 2nd year Computer Science and Engineering student at Madan Mohan Malaviya University Of Technology , Gorakhpur . I just love competitive coding and Web Development.",
+		"no_of_posts" : 3,
+		"img" : "myimg.avg",
+		"admin_user" : "arpit456jain",
+		"admin_password" : "1234",
+		"login":"True",
+		"upload_location" : "\\upload folder"
+	}
+}

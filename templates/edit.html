@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block body %} 
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename = 'img/home-bg.jpg ') }}')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="site-heading">
+            <h1>Welcome in</h1>
+            <span class="subheading">Admin Panel DashBoard </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <section>
+    <div class="container-fluid">
+      <h5 class="text-center">Welcome You are logged in</h5>
+      <a href="/dashboard" class="btn btn-primary">DashBoard</a>    
+      <a href="/logout" class="btn btn-primary">Log Out</a>    
+      <div class="container">
+  <h2 class="text-center">All Posts</h2>     
+    <div class="container">
+    {% if post == None %}
+    <form action="/edit/0" method="post">
+    {% else %}
+    
+        <form action="/edit/{{sno}}" method="post">
+        <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Sno</label>
+        <input type="number" class="form-control" name='sno' id="exampleInputEmail1" aria-describedby="emailHelp" value="{{post.sno}}">
+      </div>
+    {% endif %}
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Title</label>
+    <input type="text" class="form-control" name='title' id="exampleInputEmail1" aria-describedby="emailHelp" value="{{post.title}}">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Content</label>
+    <input type="text" class="form-control" name='content' id="exampleInputEmail1" aria-describedby="emailHelp" value="{{post.content}}">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Slug</label>
+    <input type="text" class="form-control" name='slug' id="exampleInputEmail1" aria-describedby="emailHelp" value="{{post.slug}}">
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+    </div>
+</div>
+
+    </div>
+  </section>
+  {% endblock %}
+
