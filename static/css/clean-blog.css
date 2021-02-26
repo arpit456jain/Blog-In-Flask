@@ -1,15 +1,13 @@
-/*!
- * Start Bootstrap - Clean Blog v5.0.9 (https://startbootstrap.com/themes/clean-blog)
- * Copyright 2013-2020 Start Bootstrap
- * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-clean-blog/blob/master/LICENSE)
- */
+
 
 body {
   font-size: 20px;
   color: #212529;
   font-family: 'Lora', 'Times New Roman', serif;
 }
-
+a{
+  text-decoration: none;
+}
 p {
   line-height: 1.5;
   margin: 30px 0;
@@ -175,6 +173,8 @@ header.masthead {
   background-attachment: scroll;
   position: relative;
   background-size: cover;
+  height:100vh;
+  
 }
 
 header.masthead .overlay {
@@ -209,7 +209,7 @@ header.masthead .site-heading {
 
 header.masthead .page-heading h1,
 header.masthead .site-heading h1 {
-  font-size: 50px;
+  font-size: 2rem;
   margin-top: 0;
 }
 
@@ -368,7 +368,7 @@ form .form-group:first-child .floating-label-form-group {
 }
 
 footer {
-  padding: 50px 0 65px;
+  padding:20px;
 }
 
 footer .list-inline {

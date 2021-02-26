@@ -2,6 +2,7 @@ from flask import Flask,flash, render_template, request,session,redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
+import smtplib
 import os
 from werkzeug.utils import secure_filename
 
@@ -31,9 +32,14 @@ class Posts(db.Model):
     content = db.Column(db.String(120), nullable=False)
     date = db.Column(db.String(12), nullable=True)
   
-
+class Comment(db.Model):
+    sno = db.Column(db.Integer, primary_key=True)
+    postno = db.Column(db.Integer)
+    username = db.Column(db.String(30),nullable=False)
+    content = db.Column(db.String(120), nullable=False)
+    date = db.Column(db.String(12), nullable=True)
 def for_sending_mail_from_Mail():
-    import smtplib
+    
 
     con = smtplib.SMTP("smtp.gmail.com",587)
     con.ehlo()
@@ -46,21 +52,39 @@ def for_sending_mail_from_Mail():
     
     return con
 
+
+def date():
+        # datetime object containing current date and time
+    now = datetime.now()
+    
+    print("now =", now)
+
+    # dd/mm/YY H:M:S
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    print("date and time =", dt_string)	
+    
+    return str(dt_string)
+
 import math 
 @app.route('/')
 def home():
     
     posts = Posts.query.all()
-    last = math.ceil( len(posts) // int(params['no_of_posts']))
-    # print(len(posts),last,params['no_of_posts'])
+    last = math.ceil( len(posts) / int(params['no_of_posts']))
+    print(len(posts),last,params['no_of_posts'])
     #logic for pagination for post in index.html
     page = request.args.get('number')
     if not(str(page).isnumeric()):
         page = 1
     else:
         page = int(page)
+        
     # print("all goog till now")
-    if page == 1:
+    if len(posts)<params['no_of_posts']:
+        print("test")
+        prev = "#"
+        next = "#"
+    elif page == 1:
         prev = "#"
         next = "/?number=" + str(int(page)+1)
     elif page == last:
@@ -69,7 +93,7 @@ def home():
     else:
         prev = "/?number=" + str(int(page)-1)
         next = "/?number=" + str(int(page)+1)
-    page = page-1
+    page=page-1
     post = posts[page*int(params['no_of_posts']):page*int(params['no_of_posts'])+int(params['no_of_posts'])]
    
     # posts = Posts.query.all()[0:params['no_of_posts']]
@@ -83,6 +107,7 @@ def about():
 
 @app.route('/contact',methods = ['GET' ,'POST'])
 def contact():
+    
     if request.method =='POST' :
         name = request.form.get('name')
         email = request.form.get('email')
@@ -94,7 +119,8 @@ def contact():
 
         # now we will send email to us with this contact 
         mail = for_sending_mail_from_Mail() #fun call for mail
-        mail.sendmail("arpit456jain@gmail.com","111arpit1@gmail.com","Subject:Tut \n\n"+message+"\n"+phone)    
+        mail.sendmail("arpit456jain@gmail.com","111arpit1@gmail.com","Subject:Tut \n\n"+message+"\n"+phone) 
+        flash('Thanks for Contacting Me your message has been saved to my database', 'success')   
     return render_template('contact.html',params=params)
 
 
@@ -103,11 +129,25 @@ def contact():
     
 #     return render_template('post.html')
    
-@app.route("/post/<string:post_slug>", methods=['GET'])
+@app.route("/post/<string:post_slug>", methods=['GET','POST'])
 def post_route(post_slug):
     post = Posts.query.filter_by(slug=post_slug).first()
-    print(post)
-    return render_template('post.html', params=params, post=post)
+    allcmnts = Comment.query.filter_by(postno = post.sno).all()
+    
+    if request.method == 'POST':
+        print('post mthod')
+        content = request.form.get('cmnt')
+        username = request.form.get('username')
+        postsno = post.sno
+        cur_date = date()
+        # print(content,postsno,cur_date)
+        cmnt = Comment(postno=postsno,content=content,date=cur_date,username=username)
+        db.session.add(cmnt)
+        db.session.commit()
+        flash('Congrats!! Your Comment has been added successfully','success')
+        return redirect('/post/'+post.slug)
+    # print("all cmnts related to this post",allcmnts)
+    return render_template('post.html', params=params, post=post,allcmnts=allcmnts)
   
 
 # session = {'user':params['admin_user']}
@@ -129,7 +169,11 @@ def login():
             session['user'] = username
             params['login'] = False
             posts = Posts.query.all()
+            # flash("Log in Successfully","success")
             return render_template('dashboard.html',params=params,posts=posts)
+        else:
+            flash("Wrong Password","danger")
+            return redirect("/login")
 
     else:
         return render_template('login.html',params=params)
@@ -142,23 +186,26 @@ def dashboard():
         return render_template('dashboard.html',params=params,posts=posts)
         
     else:
-        return render_template('login.html')
+        return redirect("/login")
 
+#add or edit post
 @app.route("/edit/<string:sno>",methods=['GET','POST'])
 def edit(sno):
-    
+
     if 'user' in session  and session['user'] == params['admin_user']:
         if request.method == 'POST':
             box_title = request.form.get('title') 
             box_slug = request.form.get('slug')
             box_content = request.form.get('content')
             box_sno = request.form.get('sno')
-            
+            cur_date = date()
+            print("date is",cur_date,"and type is",type(cur_date))
             if sno == '0':
                 #add new post
-                post = Posts(title=box_title,slug=box_slug,content=box_content)
+                post = Posts(title=box_title,slug=box_slug,content=box_content,date=cur_date)
                 db.session.add(post)
                 db.session.commit()
+                flash("New Post is Added Successfully!","success")
                 print("added successfully")
                 return redirect('/dashboard')
             else:
@@ -169,8 +216,10 @@ def edit(sno):
                 post.title = box_title
                 post.slug = box_slug
                 post.content = box_content
+                post.date = cur_date
                 db.session.add(post)
                 db.session.commit()
+                flash("Post has been edit and saved succesfully!","success")
                 return redirect('/dashboard')
                
         else:
@@ -187,6 +236,7 @@ def delete(sno):
         post = Posts.query.filter_by(sno=sno).first()   
         db.session.delete(post)
         db.session.commit()
+        flash("Post Deleted Successfully",'success')
         return redirect('/dashboard')
         
     else:
@@ -197,6 +247,7 @@ def logout():
     global session
     session = {}
     params['login'] = True
+    flash("Logged out Successfully","success")
     return redirect('/')
 
 
@@ -205,12 +256,13 @@ def logout():
 @app.route("/uploader",methods=['GET','POST'])
 def uploader():
     if request.method == 'POST':
-        print("post")
+        print("post req")
         file = request.files['file']
+        print(file)
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.root_path+params['upload_location'],filename))
-        # flash('Message sent succesfully', 'succes')
-        return "uploaded succesfully!!"
+        flash('File uploaded to database succesfully', 'success')
+        return redirect('/dashboard')
     else:
         print("get")
     return redirect('/')

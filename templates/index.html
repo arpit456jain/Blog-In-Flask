@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
 
-{% block title %}Clean Blog - Start Bootstrap Theme{% endblock title %}
+{% block title %}CodesmashersBlog{% endblock title %}
  
 {% block body %}
 
 <!-- Page Header -->
-  <header class="masthead" style="background-image: url('       {{url_for('static',filename='img/home-bg.jpg')}}   ')">
+  <header class="masthead" style="background-image: url('       {{url_for('static',filename='img/bg/bg1.jpg')}}   ')">
          
     <div class="overlay"></div>
     <div class="container">
@@ -13,7 +13,7 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
             <h1>{{params['blog_name']}}</h1>
-            <span class="subheading">A Blog Template ready to use</span>
+            <span class="subheading">This is the home page where all posts can be accessed by users</span>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
             </h3>
           </a>
           <p class="post-meta">Posted by
-            <a href="#">{{params['admin_user']}}</a>
+            <a href="https://arpit456jain.github.io/CodeSmashers/Portfolio/index.html">{{params['admin_user']}}</a>
             {{post.date}}</p>
         </div>
         <hr>

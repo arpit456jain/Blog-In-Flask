@@ -1,37 +1,104 @@
 {% extends 'layout.html' %}
 
-{% block body %} 
+{% block body %}
 
-  <!-- Page Header -->
-  <header class="masthead" style="background-image: url('{{ url_for('static',filename='img/post-bg.jpg') }}')">
-    <div class="overlay"></div>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-heading">
-            <h1>{{post.title}}</h1>
-            <h2 class="subheading">Problems look mighty small from 150 miles up</h2>
-            <span class="meta">Posted by
-              <a href="#">Start Bootstrap</a>
-              on August 24, 2019</span>
-          </div>
+<!-- Page Header -->
+<header class="masthead" style="background-image: url('{{ url_for('static',filename='img/bg/bg3.jpg') }}')">
+  <div class="overlay"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-9 col-md-10 mx-auto">
+        <div class="post-heading col-12">
+          <h1>{{post.title}}</h1>
+          <h2 class="subheading">{{post.subheading}}</h2>
+          <span class="meta">Posted by
+            <a href="#">{{params['admin_user']}}</a>
+            on {{post.date}}</span>
         </div>
       </div>
     </div>
-  </header>
+  </div>
+</header>
 
-  <!-- Post Content -->
-  <article>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto">
-         
-          {{post.content}}
-          
-        </div>
+<!-- Post Content -->
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+
+        {{post.content}}
+
       </div>
     </div>
-  </article>
+  </div>
+</article>
+<div class="container">
+  <p>
+    <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+      aria-expanded="false" aria-controls="collapseExample">
+      Add a comment
+    </button>
+  </p>
+  <div class="collapse" id="collapseExample">
+    <form action="" method="post">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Your Name</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username"
+          placeholder="Enter your Name" required>
 
+      </div>
+      <div class="input-group">
+        <span class="input-group-text">Write your comment here</span>
+        <textarea class="form-control" aria-label="With textarea" name="cmnt"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary my-2">Add</button>
+    </form>
+  </div>
+</div>
+<div>
+  <div class="container">
+    <h1>Comments</h1>
+    <div class="row">
+        {% for post in allcmnts %}
+        <div class="col-12 my-3">
+        <div class="post-preview">
+          <p class="post-subtitle" style="margin:0">
+            {{post.content[0:135]}}
+
+          </p>
+          <p class="collapse" id="collapsecmnt{{post.sno}}" style="margin:0">
+            {{post.content[135:]}}
+          </p>
+        </div>
+        {% if post.content|length > 100 %}
+        <a class="text-primary" id="MyReadMoreOrLessButton" data-bs-toggle="collapse" href="#collapsecmnt{{post.sno}}"
+          role="button" aria-expanded="false" aria-controls="collapseExample"
+          style="text-decoration: underline;font-weight: bold" onclick="readMoreOrLess()">
+          Read More
+        </a>
+        {% endif %}
+        <p class="post-meta" style="margin-top:0vh;margin-bottom:0">Posted by
+          {{post.username}} on <span class="badge bg-success">( {{post.date}} ) </span></p>
+      </div>
+      <hr>
+
+      {% endfor %}
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  let MyReadMoreOrLessButton = document.getElementById('MyReadMoreOrLessButton');
+  function readMoreOrLess() {
+    console.log("button cliked")
+    if (MyReadMoreOrLessButton.classList.contains("collapsed")) {
+
+      MyReadMoreOrLessButton.text = "Read More"
+
+    }
+    else {
+      MyReadMoreOrLessButton.text = "Read Less"
+    }
+  }
+</script>
 {% endblock body %}
- 

@@ -1,8 +1,58 @@
 {% extends "layout.html" %}
+{% block css %}
+@media only screen and (max-width:700px)
+{
+  input[type="file"]
+  {
+    font-size:.6rem;
+  }
+  
+  .subheading
+  {
+    font-size:1.1rem;
+  }
+  .btn
+  {
+    margin-top:2vh;
+    padding: 5px 10px;
+    border-radius: 10px;
+  }
+  h4
+  {
+    font-size:1rem;
+  }
+  
+  .table th, .table td
+  {
+    font-size:.7rem;
+    padding:0.2rem;
+  
+  }
+  .table .special
+  {
+    width:25vw;
+  }
+  .table .content-hide
+  {
+    display:none;
+  }
 
+  .table .btn
+  {
+    margin-top:0vh;
+    font-size:.5rem;
+    padding: 5px 5px;
+    border-radius: 10px;
+  }
+  .filesubmit
+  {
+    font-size:.7rem;
+  }
+}
+{% endblock css %}
 {% block body %} 
   <!-- Page Header -->
-  <header class="masthead" style="background-image: url('{{ url_for('static', filename = 'img/home-bg.jpg ') }}')">
+  <header class="masthead" style="background-image: url('{{ url_for('static', filename = 'img/bg/bg4.jpg ') }}')">
     <div class="overlay"></div>
     <div class="container">
       <div class="row">
@@ -18,27 +68,30 @@
 
   <!-- Main Content -->
   <section>
-    <div class="container-fluid">
+    <div class="container-fluid px-0">
       <h5 class="text-center">Welcome You are logged in</h5>
       <div class="container">
-  <h2 class="text-center">All Posts are listed here  <a href="/edit/0" class="btn btn-primary ">Add New Post</a>  </h2> 
-   
+  <h2 class="text-center subheading">All Posts are listed here  <a href="/edit/0" class="btn btn-primary ">Add New Post</a>  </h2> 
+   </div>
   
 <div class="container">
-  <h2>Upload a file</h2>
+  <h4>Upload a file</h4>
   <form action="/uploader" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" id="">
-    <button class="btn btn-primary" type="submit">Submit</button>
+    <input type="file" name="file" id="" required>
+    <br>
+    <button class="btn btn-primary my-2 filesubmit" type="submit">Submit</button>
   </form>  
 </div> 
-  <table class="table">
+  
+<div class="container px-2">
+<table class="table">
     <thead>
       <tr>
         <th>Title</th>
-        <th>date</th>
-        <th>Content</th>
-        <th>edit</th>
-        <th>delete</th>
+        <th class="special">Date and Time</th>
+        <th class="content-hide">Content</th>
+        <th>Edit</th>
+        <th>Delete</th>
       </tr>
     </thead>
     <tbody>
@@ -46,7 +99,7 @@
       <tr>
         <td>{{post.title}}</td>
         <td>{{post.date}}</td>
-        <td>{{post.content[:20]}}</td>
+        <td class="content-hide">{{post.content[:40]}}</td>
         <td><a href="/edit/{{post.sno}}"><button class="btn btn-primary">Edit</button></a></td>
         <td><a href="/delete/{{post.sno}}"><button class="btn btn-primary">Delete</button></a></td>
       </tr>
@@ -55,7 +108,6 @@
   </table>
 </div>
 
-    </div>
   </section>
   {% endblock %}
 

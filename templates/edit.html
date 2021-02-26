@@ -9,7 +9,7 @@
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="site-heading">
             <h1>Welcome in</h1>
-            <span class="subheading">Admin Panel DashBoard </span>
+            <span class="subheading">Edit your post </span>
           </div>
         </div>
       </div>
@@ -40,9 +40,10 @@
     <input type="text" class="form-control" name='title' id="exampleInputEmail1" aria-describedby="emailHelp" value="{{post.title}}">
   </div>
   <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label">Content</label>
-    <input type="text" class="form-control" name='content' id="exampleInputEmail1" aria-describedby="emailHelp" value="{{post.content}}">
+    <label for="exampleFormControlTextarea1" class="form-label">Content</label>
+    <textarea class="form-control" id="Textarea1" rows="8" name="content" value="{{post.content}}"></textarea>
   </div>
+ 
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Slug</label>
     <input type="text" class="form-control" name='slug' id="exampleInputEmail1" aria-describedby="emailHelp" value="{{post.slug}}">
@@ -54,5 +55,11 @@
 
     </div>
   </section>
+
+  <script>
+  console.log('helo');
+  let txtarea = document.getElementById("Textarea1");
+    txtarea.value = `{{post.content}}`
+   </script>
   {% endblock %}
 
